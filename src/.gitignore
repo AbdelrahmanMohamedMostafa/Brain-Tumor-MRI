@@ -4,9 +4,9 @@ __pycache__/
 *$py.class
 
 venv/
-*.csv
 src/data/
-*.zip
+**/data/
+*.jpg
 
 # C extensions
 *.so
