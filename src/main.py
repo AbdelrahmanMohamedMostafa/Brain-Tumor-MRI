@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, url_for
 from tensorflow.keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
 import numpy as np
@@ -11,10 +11,12 @@ app = Flask(__name__)
 model = load_model('src\models\model.h5')
 
 # Class labels
-class_labels = ['pituitary', 'glioma', 'notumor', 'meningioma']
+class_labels = ['glioma', 'meningioma', 'notumor', 'pituitary']
 
 # Define the uploads folder
-UPLOAD_FOLDER = './uploads'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
@@ -49,9 +51,10 @@ def index():
 
             # Predict the tumor
             result, confidence = predict_tumor(file_location)
+            
 
             # Return result along with image path for display
-            return render_template('index.html', result=result, confidence=f"{confidence*100:.2f}%", file_path=f'/uploads/{file.filename}')
+            return render_template('index.html', result=result, confidence=f"{confidence*100:.2f}%", file_location=file.filename)
 
     return render_template('index.html', result=None)
 
